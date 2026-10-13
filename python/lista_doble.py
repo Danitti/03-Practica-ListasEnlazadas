@@ -229,7 +229,23 @@ class ListaDoble:
         #   [1, 2, 3] -> [3, 2, 1]
         # TODO: en cada nodo, intercambia .anterior y .siguiente
         #       (a, b = b, a); al final, intercambia cabeza y cola.
-        raise NotImplementedError
+        
+        if (self.tamano == 0):
+            return self
+
+        
+        iterador = self.cabeza.siguiente
+        
+        while (iterador != self.cola):
+            puntero_auxiliar = iterador.siguiente
+            iterador.siguiente, iterador.anterior = iterador.anterior, iterador.siguiente
+            iterador = puntero_auxiliar
+        
+        
+        self.cabeza, self.cola = self.cola, self.cabeza
+        
+        
+
 
     def intercalar(self, otra):
         # Coste: O(?). otra NO se modifica.
