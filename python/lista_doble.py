@@ -77,9 +77,12 @@ class ListaDoble:
             actual = actual.siguiente
 
     def __reversed__(self):                      # reversed(l)
-        # Coste de cada paso: O(?)   Recorrido completo: O(?)
+        # Coste de cada paso: O(1)   Recorrido completo: O(n)
         # TODO: igual que __iter__ pero empezando por la cola y yendo hacia atras.
-        raise NotImplementedError
+        actual = self.cola
+        while actual is not None:
+            yield actual.dato
+            actual = actual.anterior
 
     def buscar(self, dato):
         # O(n). Devuelve el PRIMER nodo cuyo dato es 'dato', o None si no esta.
@@ -115,51 +118,109 @@ class ListaDoble:
         return nuevo
 
     def insert_last(self, dato):
-        # Coste: O(?)
-        # TODO: simetrico a insert_first, trabajando sobre la cola.
-        raise NotImplementedError
+        # Coste: O(1)
+        nuevo = NodoDoble(dato)
+        if self.cola is None:
+            self.cabeza = self.cola = nuevo
+        else:
+            nuevo.anterior = self.cola
+            self.cola.siguiente = nuevo
+            self.cola = nuevo
+        self.tamano += 1
+        return nuevo
+            
 
-    def insert_before(self, nodo, dato):
-        # Coste: O(?)
+    def insert_before(self, nodo: NodoDoble, dato):
+        # Coste: O(1)
         # pre: nodo es un nodo de ESTA lista.
-        # TODO: caso especial -> nodo es la cabeza (usa insert_first).
-        raise NotImplementedError
-
-    def insert_after(self, nodo, dato):
-        # Coste: O(?)
+        if nodo == self.cabeza:
+            return self.insert_first(dato)
+        
+        nuevo = NodoDoble(dato)
+        nuevo.anterior = nodo.anterior
+        nuevo.siguiente = nodo
+        (nodo.anterior).siguiente = nuevo
+        nodo.anterior = nuevo
+        self.tamano += 1
+        return nuevo
+        
+        
+    def insert_after(self, nodo: NodoDoble, dato):
+        # Coste: O(1)
         # pre: nodo es un nodo de ESTA lista.
-        # TODO: caso especial -> nodo es la cola (usa insert_last).
-        raise NotImplementedError
+        if nodo == self.cola:
+            return self.insert_last(dato)
 
+        nuevo = NodoDoble(dato)
+        nuevo.anterior = nodo
+        nuevo.siguiente = nodo.siguiente
+        (nodo.siguiente).anterior = nuevo
+        nodo.siguiente = nuevo 
+        self.tamano +=1
+        return nuevo
     # --- Borrado ------------------------------------------------------------
 
-    def delete_node(self, nodo):
-        # Coste: O(?)
+    def delete_node(self, nodo: NodoDoble):
+        # Coste: O(1)
         # pre : nodo es un nodo de ESTA lista.
         # post: devuelve nodo.dato y deja nodo.anterior y nodo.siguiente a None.
         # TODO: reconectar el enlace izquierdo (o mover cabeza si nodo era la cabeza)
         # TODO: reconectar el enlace derecho (o mover cola si nodo era la cola)
         # TODO: actualizar tamano
-        raise NotImplementedError
+        
+        if (nodo == self.cabeza):
+            self.cabeza = nodo.siguiente
+        else:
+            (nodo.anterior).siguiente = nodo.siguiente
+        
+        if (nodo== self.cola):
+            self.cola = nodo.anterior
+        else:
+            (nodo.siguiente).anterior = nodo.anterior
+        
+        
+        nodo.anterior = None
+        nodo.siguiente = None
+        self.tamano -= 1
+        return nodo.dato
+        
+        
 
     def delete_first(self):
-        # Coste: O(?)
+        # Coste: O(1)
         # Si la lista esta vacia: raise IndexError("..."), como list.pop().
         # Devuelve el dato borrado. Pista: es un caso particular de delete_node.
-        raise NotImplementedError
+        if (self.tamano == 0):
+            raise IndexError("Se intenta borrar un elemento en una lista vacía.")
+        return self.delete_node(self.cabeza)
 
     def delete_last(self):
-        # Coste: O(?)
+        # Coste: O(1)
         # Si la lista esta vacia: raise IndexError("..."), como list.pop().
-        raise NotImplementedError
+        if (self.tamano == 0):
+            raise IndexError("Se intenta borrar un elemento en una lista vacía.")
+        return self.delete_node(self.cola)
 
     # --- Palindromo ---------------------------------------------------------
 
     def es_palindromo(self):
-        # Coste: O(?) en tiempo y O(?) en memoria auxiliar.
+        # Coste: O(n/2) en tiempo y 3 variables en memoria auxiliar.
         # TODO: dos punteros, inicio = self.cabeza y fin = self.cola, que
         #       avanzan hacia el centro. Bastan tamano // 2 comparaciones.
-        raise NotImplementedError
+        
+        tamano_auxiliar = self.tamano
+        puntero_cabeza = self.cabeza
+        puntero_cola = self.cola
+        while (tamano_auxiliar > self.tamano // 2):
+            if (puntero_cabeza.dato != puntero_cola.dato):
+                return False
+            puntero_cabeza = puntero_cabeza.siguiente
+            puntero_cola = puntero_cola.anterior
+            tamano_auxiliar -= 1
+        
+        return True
+
+        
 
     # --- Ampliacion (opcional, no puntua) -------------------------------------
 
