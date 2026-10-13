@@ -229,20 +229,31 @@ class ListaDoble:
         #   [1, 2, 3] -> [3, 2, 1]
         # TODO: en cada nodo, intercambia .anterior y .siguiente
         #       (a, b = b, a); al final, intercambia cabeza y cola.
-        
         if (self.tamano == 0):
-            return self
+            return []
 
+        if (self.cabeza == self.cola):
+            return self
         
-        iterador = self.cabeza.siguiente
-        
-        while (iterador != self.cola):
-            puntero_auxiliar = iterador.siguiente
+        iterador = self.cabeza
+        contador = 0
+        while (contador < self.tamano):
             iterador.siguiente, iterador.anterior = iterador.anterior, iterador.siguiente
-            iterador = puntero_auxiliar
-        
-        
+            
+            iterador = iterador.anterior
+            contador += 1
+            
         self.cabeza, self.cola = self.cola, self.cabeza
+            
+        
+            
+        
+            
+                
+            
+                
+        
+        
         
         
 
