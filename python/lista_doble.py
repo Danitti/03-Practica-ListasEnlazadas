@@ -246,7 +246,7 @@ class ListaDoble:
         self.cabeza, self.cola = self.cola, self.cabeza
             
     def intercalar(self, otra: ListaDoble):
-        # Coste: O(?). otra NO se modifica.
+        # Coste: O(n). otra NO se modifica.
         #   [1, 3, 5].intercalar([2, 4, 6, 8, 10]) -> [1, 2, 3, 4, 5, 6, 8, 10]
         # TODO: usa insert_after sobre el nodo actual de self y, cuando self
         #       se acabe, insert_last.
@@ -272,7 +272,38 @@ class ListaDoble:
         #   [1,2,3,4,5].rotar(2)                -> [4,5,1,2,3]
         #   [1,2,3,4,5].rotar(2, derecha=False) -> [3,4,5,1,2]
         # TODO: normaliza k %= tamano, localiza la nueva cola y reconecta.
-        raise NotImplementedError
+        
+        if (self == [] or self.tamano == 0):
+            return []
+        
+        if (k == 0):
+            return self
+        k = k % self.tamano
+        if derecha:
+            nodo_trasero = self.cola
+            while (k > 0):
+                
+                self.cabeza.anterior = nodo_trasero
+                nodo_trasero.siguiente = self.cabeza
+                self.cola = nodo_trasero.anterior
+                
+                nodo_trasero.anterior = None
+                self.cabeza = nodo_trasero
+                self.cola.siguiente = None
+                nodo_trasero = self.cola
+                k -= 1
+            self.cola.siguiente = None
+        else:
+            nodo_delantero = self.cabeza
+            while (k > 0):
+                self.cola.siguiente = nodo_delantero
+                nodo_delantero.anterior = self.cola
+                self.cabeza = nodo_delantero.siguiente
+                nodo_delantero.siguiente = None
+                self.cola = nodo_delantero
+                k -= 1
+            self.cabeza.anterior = None
+        
 
     # --- Comprobacion explicita del invariante (no se toca) --------------
 
