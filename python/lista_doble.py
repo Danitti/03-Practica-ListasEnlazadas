@@ -225,7 +225,7 @@ class ListaDoble:
     # --- Ampliacion (opcional, no puntua) -------------------------------------
 
     def reverse(self):
-        # Coste: O(?). Sin crear nodos nuevos.
+        # Coste: O(n). Sin crear nodos nuevos.
         #   [1, 2, 3] -> [3, 2, 1]
         # TODO: en cada nodo, intercambia .anterior y .siguiente
         #       (a, b = b, a); al final, intercambia cabeza y cola.
@@ -245,25 +245,27 @@ class ListaDoble:
             
         self.cabeza, self.cola = self.cola, self.cabeza
             
-        
-            
-        
-            
-                
-            
-                
-        
-        
-        
-        
-
-
-    def intercalar(self, otra):
+    def intercalar(self, otra: ListaDoble):
         # Coste: O(?). otra NO se modifica.
         #   [1, 3, 5].intercalar([2, 4, 6, 8, 10]) -> [1, 2, 3, 4, 5, 6, 8, 10]
         # TODO: usa insert_after sobre el nodo actual de self y, cuando self
         #       se acabe, insert_last.
-        raise NotImplementedError
+        
+        if self == []:
+            return otra
+
+        if otra == []:
+            return self
+        iterador_propio = self.cabeza
+        iterador_otro = otra.cabeza
+        while (iterador_propio is not None and iterador_otro is not None): 
+            iterador_propio = self.insert_after(iterador_propio, iterador_otro.dato)
+            iterador_propio = iterador_propio.siguiente
+            iterador_otro = iterador_otro.siguiente
+        
+        while (iterador_otro is not None):
+            self.insert_last(iterador_otro.dato)
+            iterador_otro = iterador_otro.siguiente
 
     def rotar(self, k, derecha=True):
         # Coste: O(?). Sin crear nodos nuevos.
