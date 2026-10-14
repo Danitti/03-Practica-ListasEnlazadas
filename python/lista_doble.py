@@ -279,31 +279,23 @@ class ListaDoble:
         if (k == 0):
             return self
         k = k % self.tamano
-        if derecha:
-            nodo_trasero = self.cola
-            while (k > 0):
+        while (k > 0):
+            if (derecha):
                 
-                self.cabeza.anterior = nodo_trasero
-                nodo_trasero.siguiente = self.cabeza
-                self.cola = nodo_trasero.anterior
+                self.cabeza.anterior, self.cola.siguiente = self.cola, self.cabeza
+                self.cabeza, self.cola = self.cola, self.cola.anterior
+                self.cabeza.anterior = None
+                k -= 1
+            
+            else:
                 
-                nodo_trasero.anterior = None
-                self.cabeza = nodo_trasero
+                self.cabeza.anterior, self.cola.siguiente = self.cola, self.cabeza
+                self.cola, self.cabeza = self.cabeza, self.cabeza.siguiente
                 self.cola.siguiente = None
-                nodo_trasero = self.cola
                 k -= 1
-            self.cola.siguiente = None
-        else:
-            nodo_delantero = self.cabeza
-            while (k > 0):
-                self.cola.siguiente = nodo_delantero
-                nodo_delantero.anterior = self.cola
-                self.cabeza = nodo_delantero.siguiente
-                nodo_delantero.siguiente = None
-                self.cola = nodo_delantero
-                k -= 1
-            self.cabeza.anterior = None
         
+        self.cola.siguiente = None
+        self.cabeza.anterior = None
 
     # --- Comprobacion explicita del invariante (no se toca) --------------
 
